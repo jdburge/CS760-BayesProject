@@ -145,4 +145,15 @@ public class BayesNet {
 
 		return firstValueProbability / (firstValueProbability + secondValueProbability);
 	}
+	
+	public void makeFair() {
+		List<Edge> sensativeNodeEdges = sensativeNode.connectedEdges;
+		FeatureNode childNode = null;
+		for( Edge edge: sensativeNodeEdges) {
+			if(sensativeNode.isPointingAway(edge)) {
+				childNode = (FeatureNode) edge.end();
+				childNode.makeFair();
+			}
+		}
+	}
 }
