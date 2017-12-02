@@ -45,7 +45,7 @@ public abstract class Node {
 		return p;
 	}
 
-	private boolean isPointingAway(Edge edge) {
+	public boolean isPointingAway(Edge edge) {
 		return edge.end() != this;
 	}
 
