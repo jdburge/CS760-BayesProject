@@ -176,6 +176,7 @@ public class BayesLearner {
 		} else {
 			net = BayesNet.treeAugmentedNet(featureList, trainInstances);
 			net.train(trainInstances);
+			net.makeFair();
 		}
 	}
 
