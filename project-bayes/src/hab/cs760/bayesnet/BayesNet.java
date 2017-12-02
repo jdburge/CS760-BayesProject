@@ -14,6 +14,7 @@ import java.util.Queue;
  */
 public class BayesNet {
 	public LabelNode labelNode;
+	public FeatureNode sensativeNode;
 
 	public static BayesNet naiveNet(List<Feature> featureList) {
 		NominalFeature classLabel = (NominalFeature) featureList.get(featureList.size() - 1);
@@ -26,6 +27,10 @@ public class BayesNet {
 			Edge edge = Edge.directedEdge(net.labelNode, childNode);
 			net.labelNode.connectedEdges.add(edge);
 			childNode.labelNodeEdge = edge;
+			
+			if(feature == featureList.get(0)) {
+				net.sensativeNode = childNode;
+			}
 		}
 		return net;
 	}
