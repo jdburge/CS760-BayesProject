@@ -96,4 +96,32 @@ public class Util {
 			}
 		}
 	}
+
+
+	/**
+	 * Test for discrimination: A simple solution is the discrimination score, which we define as
+	 * the difference between the probability of a male and a female of being in the high-income
+	 * class.
+	 * @param instances data set D
+	 * @param sensitiveAttribute e.g. sex = male/female
+	 * @param classLabel e.g. income = high/low
+	 * @param positiveClassLabel the label we want to use for calculation, e.g. high
+	 * @return The difference between the probability of each of the possible sensitive attribute
+	 * values having the positiveClassLabel. In an ideal world, this value would be zero.
+	 * e.g. P(high|male) - P(high|female)
+	 * @see "Calders et al. (2010) Three naive Bayes approaches for discrimination-free
+	 * classfication"
+	 */
+	public static double discriminationScoreForPositiveLabel(List<Instance> instances, NominalFeature
+			sensitiveAttribute, NominalFeature classLabel, String positiveClassLabel) {
+
+		double pClassGivenSensitiveValue0 = InstanceCounter.probabilityOfCriterionGivenCriteria
+				(sensitiveAttribute, sensitiveAttribute.possibleValues.get(0), instances, new
+						InstanceCounter.Criterion(classLabel, positiveClassLabel));
+		double pClassGivenSensitiveValue1 = InstanceCounter.probabilityOfCriterionGivenCriteria
+				(sensitiveAttribute, sensitiveAttribute.possibleValues.get(1), instances, new
+						InstanceCounter.Criterion(classLabel, positiveClassLabel));
+
+		return pClassGivenSensitiveValue0 - pClassGivenSensitiveValue1;
+	}
 }
