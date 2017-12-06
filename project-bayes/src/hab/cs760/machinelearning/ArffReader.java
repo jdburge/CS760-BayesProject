@@ -22,10 +22,14 @@ public class ArffReader {
 	public static Feature makeFeature(String line, int index) {
 		String[] splitLine = line.split(" ");
 		String featureName = splitLine[1].replace("\'", "");
-		featureName = featureName.replace(".", "");
+		if (featureName.endsWith(".")) {
+			featureName = featureName.substring(0, featureName.length()-1);
+		}
+		featureName = featureName.trim();
 
 		Feature feature;
-		if (line.contains("numeric") || line.contains("real")) {
+		if (!splitLine[2].startsWith("{") && (splitLine[3].contains("numeric") || line.contains
+				("real"))) {
 			feature = new NumericFeature(featureName, index);
 		} else {
 			int startIndex = line.indexOf('{');

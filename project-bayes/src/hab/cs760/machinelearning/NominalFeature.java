@@ -15,9 +15,12 @@ public class NominalFeature extends Feature {
 
 		possibleValueString = possibleValueString.replace("{", "");
 		possibleValueString = possibleValueString.replace("}", "");
-		possibleValueString = possibleValueString.replace(" ", "");
+		possibleValueString = possibleValueString.trim();
 		possibleValueString = possibleValueString.replace("\'", "");
 		possibleValues = Arrays.asList(possibleValueString.split(","));
+		for (int i = 0; i < possibleValues.size(); i++) {
+			possibleValues.set(i, possibleValues.get(i).trim());
+		}
 	}
 
 	public NominalFeature(String name, int index, String... possibleValues) {

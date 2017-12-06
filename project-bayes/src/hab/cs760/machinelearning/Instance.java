@@ -22,8 +22,10 @@ public class Instance {
 		for (int i = 0; i < values.length; i++) {
 			NominalFeature feature = (NominalFeature) featureList.get(i);
 			String featureValue = values[i].replace("\'", "");
-			featureValue = featureValue.replace(".", "");
-			featureValue = featureValue.replace(" ", "");
+			if (featureValue.endsWith(".")) {
+				featureValue = featureValue.substring(0, featureValue.length() - 1);
+			}
+			featureValue = featureValue.trim();
 			instance.addFeature(feature, featureValue);
 		}
 
