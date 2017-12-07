@@ -82,156 +82,161 @@ public class FeatureNode extends Node {
 
 	public void makeFair1() {
 		Map<String, Map<String, Map<String, Double>>> newProbabilities = new HashMap();
-		FeatureNode sensativeNode = (FeatureNode)getTreeParent();
-		NominalFeature sensativeFeature = sensativeNode.feature;
+		FeatureNode sensitiveNode = (FeatureNode)getTreeParent();
+		NominalFeature sensitiveFeature = sensitiveNode.feature;
 		Node labelNode = labelNodeEdge.start();
 		NominalFeature labelFeature = labelNode.feature;
 		double baseProb = -1.0;
-		double probSensativeFeature = -1.0;
+		double probSensitiveFeature = -1.0;
 		double newProb = -1.0;
 		double weightedAverage = -1.0;
-		
+
 		for(String labelFeatureValue : labelFeature.possibleValues) {
 			Map<String, Map<String, Double>> block = new HashMap<>();
 			newProbabilities.put(labelFeatureValue, block);
-			
-			for(String sensativeFeatureValue : sensativeFeature.possibleValues) {
+
+			for(String sensitiveFeatureValue : sensitiveFeature.possibleValues) {
 				Map<String, Double> row = new HashMap();
-				probSensativeFeature = getProbOfSensativeFeature(sensativeNode, sensativeFeatureValue);
-				
+				probSensitiveFeature = getProbOfSensitiveFeature(sensitiveNode, sensitiveFeatureValue);
+
 				for(String thisFeatureValue : this.feature.possibleValues) {
-					baseProb = probabilityOf(labelFeatureValue,sensativeFeatureValue,thisFeatureValue);
-					newProb = (baseProb*probSensativeFeature) + ((1-probSensativeFeature)*(1.0/this.feature.possibleValues.size()));
+					baseProb = probabilityOf(labelFeatureValue,sensitiveFeatureValue,thisFeatureValue);
+					newProb = (baseProb*probSensitiveFeature) + ((1-probSensitiveFeature)*(1.0/this.feature.possibleValues.size()));
 					row.put(thisFeatureValue, newProb);
 				}
-				block.put(sensativeFeatureValue, row);
+				block.put(sensitiveFeatureValue, row);
 			}	
 		}
+
 		probabilities = newProbabilities; 
 	}
-	
+
 	public void makeFair2() {
 		Map<String, Map<String, Map<String, Double>>> newProbabilities = new HashMap();
-		FeatureNode sensativeNode = (FeatureNode)getTreeParent();
-		NominalFeature sensativeFeature = sensativeNode.feature;
+		FeatureNode sensitiveNode = (FeatureNode)getTreeParent();
+		NominalFeature sensitiveFeature = sensitiveNode.feature;
 		Node labelNode = labelNodeEdge.start();
 		NominalFeature labelFeature = labelNode.feature;
 		double baseProb = -1.0;
-		double probSensativeFeature = -1.0;
+		double probSensitiveFeature = -1.0;
 		double newProb = 0.0;
 		double weightedAverage = -1.0;
 		Map<String, Double> row = null;
-		
+
 		for(String labelFeatureValue : labelFeature.possibleValues) {
 			Map<String, Map<String, Double>> block = new HashMap<>();
 			newProbabilities.put(labelFeatureValue, block);
-			for(String sensativeFeatureValue : sensativeFeature.possibleValues) {
+			for(String sensitiveFeatureValue : sensitiveFeature.possibleValues) {
 				row = new HashMap();
-				block.put(sensativeFeatureValue, row);
+				block.put(sensitiveFeatureValue, row);
 			}
-			
+
 			for(String thisFeatureValue : this.feature.possibleValues) {
 				newProb = 0.0;
-				for(String sensativeFeatureValue : sensativeFeature.possibleValues) {
-					probSensativeFeature = getProbOfSensativeFeature(sensativeNode, sensativeFeatureValue);
-					baseProb = probabilityOf(labelFeatureValue,sensativeFeatureValue,thisFeatureValue);
+				for(String sensitiveFeatureValue : sensitiveFeature.possibleValues) {
+					probSensitiveFeature = getProbOfSensitiveFeature(sensitiveNode, sensitiveFeatureValue);
+					baseProb = probabilityOf(labelFeatureValue,sensitiveFeatureValue,thisFeatureValue);
 					newProb += baseProb;
 				}
-				newProb = newProb/((double)sensativeFeature.possibleValues.size());
-				
-				for(String sensativeFeatureValue : sensativeFeature.possibleValues) {
-					row = block.get(sensativeFeatureValue);
-					baseProb = probabilityOf(labelFeatureValue,sensativeFeatureValue,thisFeatureValue);
+				newProb = newProb/((double)sensitiveFeature.possibleValues.size());
+
+				for(String sensitiveFeatureValue : sensitiveFeature.possibleValues) {
+					row = block.get(sensitiveFeatureValue);
+					baseProb = probabilityOf(labelFeatureValue,sensitiveFeatureValue,thisFeatureValue);
 					row.put(thisFeatureValue, newProb);
 				}
-			}	
+			}
+
 		}
+
 		probabilities = newProbabilities; 
-		
+
 	}
-	
+
 	public void makeFair3(List<Instance> instances) {
 		Map<String, Map<String, Map<String, Double>>> newProbabilities = new HashMap();
-		FeatureNode sensativeNode = (FeatureNode)getTreeParent();
-		NominalFeature sensativeFeature = sensativeNode.feature;
+		FeatureNode sensitiveNode = (FeatureNode)getTreeParent();
+		NominalFeature sensitiveFeature = sensitiveNode.feature;
 		Node labelNode = labelNodeEdge.start();
 		NominalFeature labelFeature = labelNode.feature;
 		double baseProb = -1.0;
-		double probSensativeFeature = -1.0;
+		double probSensitiveFeature = -1.0;
 		double newProb = -1.0;
 		double weightedAverage = -1.0;
-		
+
 		for(String labelFeatureValue : labelFeature.possibleValues) {
 			Map<String, Map<String, Double>> block = new HashMap<>();
 			newProbabilities.put(labelFeatureValue, block);
-			
-			for(String sensativeFeatureValue : sensativeFeature.possibleValues) {
+
+			for(String sensitiveFeatureValue : sensitiveFeature.possibleValues) {
 				Map<String, Double> row = new HashMap();
-				probSensativeFeature = getProbOfSensativeFeature(sensativeNode, sensativeFeatureValue);
-				weightedAverage = getWeightedAverage(labelFeatureValue,sensativeFeatureValue,sensativeNode, instances);
-				
+				probSensitiveFeature = getProbOfSensitiveFeature(sensitiveNode, sensitiveFeatureValue);
+				weightedAverage = getWeightedAverage(labelFeatureValue,sensitiveFeatureValue,sensitiveNode, instances);
+
 				for(String thisFeatureValue : this.feature.possibleValues) {
-					baseProb = probabilityOf(labelFeatureValue,sensativeFeatureValue,thisFeatureValue);
-					newProb = (baseProb*probSensativeFeature) + ((1-probSensativeFeature)*(weightedAverage));
+					baseProb = probabilityOf(labelFeatureValue,sensitiveFeatureValue,thisFeatureValue);
+					newProb = (baseProb*probSensitiveFeature) + ((1-probSensitiveFeature)*(weightedAverage));
 					row.put(thisFeatureValue, newProb);
 				}
-				block.put(sensativeFeatureValue, row);
+
+				block.put(sensitiveFeatureValue, row);
 			}
+
 		}
-		
+
 		probabilities = newProbabilities;
 		normalizeProbTable();
 	}
-	
-	private double getProbOfSensativeFeature(FeatureNode sensativeNode, String choice) {
+
+	private double getProbOfSensitiveFeature(FeatureNode sensitiveNode, String choice) {
 		double runningProb =0.0;
 		NominalFeature labelFeature = labelNodeEdge.start().feature;
 		for(String labelFeatureValue : labelFeature.possibleValues) {
-			runningProb += sensativeNode.probabilityOf(labelFeatureValue,"",choice);
+			runningProb += sensitiveNode.probabilityOf(labelFeatureValue,"",choice);
 		}
 		return runningProb/labelFeature.possibleValues.size();
 	}
-	
+
 	/**
 	 * Returns the probability of a choice for this feature, knowing that you don't
 	 * have a particular sensitive attribute
-	 * @param sensativeNode
-	 * @param sensativeFeatureValue
+	 * @param sensitiveNode
+	 * @param sensitiveFeatureValue
 	 * @param thisFeatureValue
 	 * @return
 	 */
-	private double secondOrderWeights(FeatureNode sensativeNode, String sensativeFeatureValue, String thisFeatureValue, List<Instance> instances) {
+	private double secondOrderWeights(FeatureNode sensitiveNode, String sensitiveFeatureValue, String thisFeatureValue, List<Instance> instances) {
 		double runningProb = 0.0;
-		NominalFeature sensativeFeature = sensativeNode.feature;
+		NominalFeature sensitiveFeature = sensitiveNode.feature;
 		Criterion crit = null;
-		
-		for(String curSensativeFeatureValue : sensativeFeature.possibleValues) {
-			if(!sensativeFeatureValue.equals(curSensativeFeatureValue)) {
-				crit = new Criterion(sensativeFeature, curSensativeFeatureValue);	
+
+		for(String curSensitiveFeatureValue : sensitiveFeature.possibleValues) {
+			if(!sensitiveFeatureValue.equals(curSensitiveFeatureValue)) {
+				crit = new Criterion(sensitiveFeature, curSensitiveFeatureValue);	
 				runningProb += InstanceCounter.probabilityOfCriterionGivenCriteria(this.feature, thisFeatureValue, instances, crit);
 			}
 		}
-		
+
 		return runningProb;
 	}
-	
-	private double getWeightedAverage(String labelFeatureValue, String sensativeFeatureValue, FeatureNode sensativeFeatureNode, List<Instance> instances) {
-		NominalFeature sensativeFeature = sensativeFeatureNode.feature;
+
+	private double getWeightedAverage(String labelFeatureValue, String sensitiveFeatureValue, FeatureNode sensitiveFeatureNode, List<Instance> instances) {
+		NominalFeature sensitiveFeature = sensitiveFeatureNode.feature;
 		double runningProb = 0.0;
-		for(String otherSensFeatureVal : sensativeFeature.possibleValues) {
-			if(!otherSensFeatureVal.equals(sensativeFeatureValue)) {
+		for(String otherSensFeatureVal : sensitiveFeature.possibleValues) {
+			if(!otherSensFeatureVal.equals(sensitiveFeatureValue)) {
 				for(String thisFeatureValue : this.feature.possibleValues) {
 					runningProb += (probabilityOf(labelFeatureValue,otherSensFeatureVal, thisFeatureValue) *
-							secondOrderWeights(sensativeFeatureNode,sensativeFeatureValue,thisFeatureValue, instances));
+							secondOrderWeights(sensitiveFeatureNode,sensitiveFeatureValue,thisFeatureValue, instances));
 				}
 			}
 		}
-		return runningProb/(sensativeFeature.possibleValues.size()-1);
+		return runningProb/(sensitiveFeature.possibleValues.size()-1);
 	}
-	
+
 	private void normalizeProbTable() {
-		FeatureNode sensativeNode = (FeatureNode)getTreeParent();
-		NominalFeature sensativeFeature = sensativeNode.feature;
+		FeatureNode sensitiveNode = (FeatureNode)getTreeParent();
+		NominalFeature sensitiveFeature = sensitiveNode.feature;
 		Node labelNode = labelNodeEdge.start();
 		NominalFeature labelFeature = labelNode.feature;
 		double runningTotal = 0.0;
@@ -239,25 +244,25 @@ public class FeatureNode extends Node {
 		double normalizedValue=0.0;
 		Map<String, Map<String, Double>> block = null;
 		Map<String, Double> row = null;
-		
+
 		for(String labelFeatureValue: labelFeature.possibleValues) {
 			block = probabilities.get(labelFeatureValue);
-			for(String sensativeFeatureValue: sensativeFeature.possibleValues) {
-				row = block.get(sensativeFeatureValue);
+			for(String sensitiveFeatureValue: sensitiveFeature.possibleValues) {
+				row = block.get(sensitiveFeatureValue);
 				runningTotal=0.0;
 				for(String thisFeatureValue: this.feature.possibleValues) {
-					runningTotal += probabilityOf(labelFeatureValue,sensativeFeatureValue,thisFeatureValue);
+					runningTotal += probabilityOf(labelFeatureValue,sensitiveFeatureValue,thisFeatureValue);
 				}
-				
+
 				average = runningTotal/((double)this.feature.possibleValues.size());
-				
+
 				for(String thisFeatureValue: this.feature.possibleValues) {
-					normalizedValue = probabilityOf(labelFeatureValue,sensativeFeatureValue,thisFeatureValue)/average;
+					normalizedValue = probabilityOf(labelFeatureValue,sensitiveFeatureValue,thisFeatureValue)/average;
 					row.put(thisFeatureValue, normalizedValue);
 				}
 			}
-			
-			
+
+
 		}
 	}
 }
