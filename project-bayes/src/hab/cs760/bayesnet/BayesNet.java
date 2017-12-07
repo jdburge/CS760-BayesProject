@@ -14,7 +14,7 @@ import java.util.Queue;
  */
 public class BayesNet {
 	public LabelNode labelNode;
-	public FeatureNode sensativeNode;
+	private FeatureNode sensitiveNode;
 
 	public static BayesNet naiveNet(List<Feature> featureList) {
 		NominalFeature classLabel = (NominalFeature) featureList.get(featureList.size() - 1);
@@ -27,9 +27,9 @@ public class BayesNet {
 			Edge edge = Edge.directedEdge(net.labelNode, childNode);
 			net.labelNode.connectedEdges.add(edge);
 			childNode.labelNodeEdge = edge;
-			
-			if(feature == featureList.get(0)) {
-				net.sensativeNode = childNode;
+
+			if (feature == featureList.get(0)) {
+				net.sensitiveNode = childNode;
 			}
 		}
 		return net;
@@ -70,8 +70,9 @@ public class BayesNet {
 			for (Edge featureToFeatureEdge : featureNode1.connectedEdges) {
 				Node featureNode2 = featureToFeatureEdge.node1 == featureNode1 ?
 						featureToFeatureEdge.node2 : featureToFeatureEdge.node1;
-				featureToFeatureEdge.weight = Util.conditionalMutualInformation(featureNode1.feature,
-						featureNode2.feature, net.labelNode.feature, trainInstances);
+				featureToFeatureEdge.weight = Util.conditionalMutualInformation
+						(featureNode1.feature, featureNode2.feature, net.labelNode.feature,
+								trainInstances);
 			}
 		}
 
@@ -150,12 +151,12 @@ public class BayesNet {
 
 		return firstValueProbability / (firstValueProbability + secondValueProbability);
 	}
-	
+
 	public void makeFair() {
-		List<Edge> sensativeNodeEdges = sensativeNode.connectedEdges;
-		FeatureNode childNode = null;
-		for( Edge edge: sensativeNodeEdges) {
-			if(sensativeNode.isPointingAway(edge)) {
+		List<Edge> sensitiveNodeEdges = sensitiveNode.connectedEdges;
+		FeatureNode childNode;
+		for (Edge edge : sensitiveNodeEdges) {
+			if (sensitiveNode.isPointingAway(edge)) {
 				childNode = (FeatureNode) edge.end();
 				childNode.makeFair();
 			}
