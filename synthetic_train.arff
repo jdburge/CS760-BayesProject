@@ -18,6 +18,7 @@
 @attribute 'f17' { True, False}
 @attribute 'f18' { True, False}
 @attribute 'f19' { True, False}
+@attribute 'f20' { True, False}
 @attribute 'sensitive' { True, False}
 @attribute 'class_actual' { True, False}
 @attribute 'class_bias' { True, False}
